@@ -2,25 +2,23 @@ sample
 ======
 
 + `informix-with-java`  
-  JNDI に依存せずにコネクションプールを管理するクラス。
-
+  JNDI に依存せずにコネクションプールを管理する。
 
 + `informix-with-perl`  
-  Perl から Informix に接続する為のモジュール。  
-  DBIx::Handler + DBIx::Simple(::Inject) + SQL::Maker
+  Perl から Informix への接続用。
 
 + `informix`  
-  Informix の設定ファイル(onconfig)
+  Informix 設定ファイル
+
++ `mysql`  
+  省メモリ my.cnf 2種
 
 + `iptables`  
   iptables 初期化シェルスクリプト
 
-+ `mysql`  
-  my.cnf 2種
-
 + `nginx-with-apache`  
   nginx+apache で PHP と .htaccess を動作させるための config。  
-  不要なモジュールや設定を極力除去した軽量化版。
+  不要なモジュールや設定を極力除去。
 
 + `perl-asf-parser`  
   Perl で ASF(WindowsMedia形式のライブストリーム)のヘッダーを  
