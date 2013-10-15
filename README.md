@@ -26,15 +26,15 @@ sample
   極力 Low Level Discovery を利用し、アイテムの作成を自動化している為、  
   管理者の工数が僅かで済みます。
 
-+ `iptables.sh`  
-  iptables 初期化シェルスクリプトです。
-
-+ `nginx.spec`
++ `nginx.spec`  
   より新しいバージョンの nginx を RPM 化する為の spec ファイルです。  
   ( epel で提供されている nginx は少し古いため )
 
-+ `kickstart.cfg`
++ `kickstart.cfg`  
   CentOS 6.4 を最小構成でセットアップする為の kickstart ファイルです。
+
++ `iptables.sh`  
+  iptables 初期化シェルスクリプトです。
 
 + `.vimrc`  
   vimrc
