@@ -1,0 +1,5 @@
+# httpd(Apache) request/sec
+UserParameter=httpd.reqs[*],curl -s http://127.0.0.1:$1/server-status?auto | grep 'Total Accesses' | cut -d' ' -f3
+
+# nginx request/sec
+UserParameter=nginx.reqs,curl -s http://127.0.0.1/nginx_status | awk 'NR==3{print $3}'

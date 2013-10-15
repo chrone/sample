@@ -1,0 +1,306 @@
+--- onconfig.std	2013-01-05 01:04:05.000000000 +0900
++++ onconfig	2013-10-15 11:09:06.990526482 +0900
+@@ -40,9 +40,9 @@
+ ###################################################################
+ 
+ ROOTNAME rootdbs
+-ROOTPATH $INFORMIXDIR/tmp/demo_on.rootdbs
++ROOTPATH $INFORMIXDIR/dblinks/rootdbs
+ ROOTOFFSET 0
+-ROOTSIZE 200000
++ROOTSIZE 2000000
+ MIRROR 0
+ MIRRORPATH $INFORMIXDIR/tmp/demo_on.root_mirror
+ MIRROROFFSET 0
+@@ -61,9 +61,9 @@
+ # PHYSBUFF           - The size of the physical log buffer, in KB
+ ###################################################################
+ 
+-PHYSFILE 50000
++PHYSFILE 40000000
+ PLOG_OVERFLOW_PATH  $INFORMIXDIR/tmp
+-PHYSBUFF 128
++PHYSBUFF 5120
+ 
+ ###################################################################
+ # Logical Log Configuration Parameters
+@@ -80,10 +80,10 @@
+ # LOGBUFF      - The size of the logical log buffer, in KB
+ ###################################################################
+ 
+-LOGFILES 6
+-LOGSIZE 10000
+-DYNAMIC_LOGS 2
+-LOGBUFF 64
++LOGFILES 16
++LOGSIZE 50000
++DYNAMIC_LOGS 1
++LOGBUFF 2048
+ 
+ ###################################################################
+ # Long Transaction Configuration Parameters
+@@ -125,6 +125,7 @@
+ 
+ MSGPATH $INFORMIXDIR/tmp/online.log
+ CONSOLE $INFORMIXDIR/tmp/online.con
++MSG_DATE 1
+ 
+ ###################################################################
+ # Tblspace Configuration Parameters
+@@ -160,7 +161,7 @@
+ #                a standard sbspace.
+ ###################################################################
+ 
+-DBSPACETEMP 
++DBSPACETEMP tempdbs1,tempdbs2,tempdbs3
+ SBSPACETEMP
+ 
+ ###################################################################
+@@ -203,8 +204,8 @@
+ ###################################################################
+ 
+ SERVERNUM 0
+-DBSERVERNAME 
+-DBSERVERALIASES
++DBSERVERNAME <censored>
++DBSERVERALIASES <censored>,<censored>
+ FULL_DISK_INIT 0
+ 
+ ###################################################################
+@@ -233,9 +234,10 @@
+ #                              0 to disable cache.
+ ###################################################################
+ 
+-NETTYPE ipcshm,1,50,CPU
++NETTYPE ipcshm,1,100,CPU
++NETTYPE soctcp,2,200,NET
+ LISTEN_TIMEOUT 60
+-MAX_INCOMPLETE_CONNECTIONS 1024
++MAX_INCOMPLETE_CONNECTIONS 100
+ FASTPOLL 1
+ NUMFDSERVERS 4
+ NS_CACHE host=900,service=900,user=900,group=900
+@@ -268,9 +270,9 @@
+ #                       Any nonzero value (optimize for one CPU VP)
+ ###################################################################
+ 
+-MULTIPROCESSOR 0
+-VPCLASS cpu,num=1,noage
+-VP_MEMORY_CACHE_KB 0
++MULTIPROCESSOR 1
++#VPCLASS cpu,num=14,aff=(0-6,8-14),noage
++VP_MEMORY_CACHE_KB 4096
+ SINGLE_CPU_VP 0
+ 
+ ###################################################################
+@@ -289,10 +291,10 @@
+ #                2 Enable concurrent I/O
+ ###################################################################
+ 
+-#VPCLASS aio,num=1
+-CLEANERS 8
+-AUTO_AIOVPS 1
+-DIRECT_IO 0
++#VPCLASS aio,num=2,aff=(7,15),noage
++CLEANERS 16
++AUTO_AIOVPS 0
++DIRECT_IO 1
+ 
+ ###################################################################
+ # Lock-Related Configuration Parameters
+@@ -303,8 +305,8 @@
+ #                      Acceptable values are ROW and PAGE (default).
+ ###################################################################
+ 
+-LOCKS 20000
+-DEF_TABLE_LOCKMODE page 
++LOCKS 3000000
++DEF_TABLE_LOCKMODE row 
+ 
+ ###################################################################
+ # Shared Memory Configuration Parameters
+@@ -343,11 +345,11 @@
+ #                    Use a comma to separate each range in the list.
+ ###################################################################
+ 
+-RESIDENT 0
++RESIDENT -1
+ SHMBASE 0x44000000L 
+-SHMVIRTSIZE 32656
+-SHMADD 8192
+-EXTSHMADD 8192
++SHMVIRTSIZE 25165824
++SHMADD 1048576
++EXTSHMADD 1048576
+ SHMTOTAL 0
+ SHMVIRT_ALLOCSEG 0,3
+ SHMNOACCESS
+@@ -371,9 +373,9 @@
+ #                      for a system block.
+ ###################################################################
+ 
+-CKPTINTVL 300
++CKPTINTVL 180
+ AUTO_CKPTS 1
+-RTO_SERVER_RESTART 0
++RTO_SERVER_RESTART 300
+ BLOCKTIMEOUT 3600
+ 
+ ##################################################################
+@@ -419,7 +421,7 @@
+ #                positive integral multiple of TAPEBLK.
+ ###################################################################
+ 
+-TAPEDEV /dev/tapedev
++TAPEDEV /dev/null
+ TAPEBLK 32
+ TAPESIZE 0
+ 
+@@ -434,7 +436,7 @@
+ #                positive integral multiple of LTAPEBLK.
+ ###################################################################
+ 
+-LTAPEDEV /dev/tapedev
++LTAPEDEV /dev/null
+ LTAPEBLK 32
+ LTAPESIZE 0
+ 
+@@ -526,8 +528,8 @@
+ #                Set to any positive integer.
+ ###################################################################
+ 
+-DD_HASHSIZE 31
+-DD_HASHMAX  10
++DD_HASHSIZE 2003
++DD_HASHMAX  20
+ 
+ ###################################################################
+ # Data Distribution Configuration Parameters
+@@ -539,8 +541,8 @@
+ #                distribution cache. Set to any positive integer.
+ ###################################################################
+ 
+-DS_HASHSIZE 31
+-DS_POOLSIZE 127
++DS_HASHSIZE 2003
++DS_POOLSIZE 6000
+ 
+ ##################################################################
+ # User Defined Routine (UDR) Configuration Parameters
+@@ -581,11 +583,11 @@
+ #                      integer between 1 and 256, inclusive.
+ ###################################################################
+ 
+-STMT_CACHE 0
+-STMT_CACHE_HITS 0
+-STMT_CACHE_SIZE 512
+-STMT_CACHE_NOLIMIT 0
+-STMT_CACHE_NUMPOOL 1
++STMT_CACHE 2
++STMT_CACHE_HITS 3
++STMT_CACHE_SIZE 1048576
++STMT_CACHE_NOLIMIT 1
++STMT_CACHE_NUMPOOL 32
+ 
+ ###################################################################
+ # Operating System Session-Related Configuration Parameters
+@@ -612,7 +614,7 @@
+ ###################################################################
+ 
+ USEOSTIME 0
+-STACKSIZE 64
++STACKSIZE 128
+ ALLOW_NEWLINE 0
+ USELASTCOMMITTED NONE
+ 
+@@ -634,7 +636,7 @@
+ 
+ FILLFACTOR 90
+ MAX_FILL_DATA_PAGES 0
+-BTSCANNER num=1,threshold=5000,rangesize=-1,alice=6,compression=default
++BTSCANNER num=5,threshold=5000,rangesize=-1,alice=7,compression=default
+ ONLIDX_MAXMEM 5120
+ 
+ ###################################################################
+@@ -662,9 +664,9 @@
+ 
+ MAX_PDQPRIORITY 100
+ DS_MAX_QUERIES
+-DS_TOTAL_MEMORY
++DS_TOTAL_MEMORY 20971520
+ DS_MAX_SCANS 1048576
+-DS_NONPDQ_QUERY_MEM 128
++DS_NONPDQ_QUERY_MEM 5242880
+ DATASKIP
+ 
+ ###################################################################
+@@ -713,7 +715,7 @@
+ 
+ OPTCOMPIND 2
+ DIRECTIVES 1
+-EXT_DIRECTIVES 0
++EXT_DIRECTIVES 1
+ OPT_GOAL -1
+ IFX_FOLDVIEW 0
+ AUTO_REPREPARE 1
+@@ -1197,8 +1199,8 @@
+ #                      threads used during fast recovery.
+ ###################################################################
+ 
+-ON_RECVRY_THREADS  1
+-OFF_RECVRY_THREADS 10
++ON_RECVRY_THREADS  5
++OFF_RECVRY_THREADS 20
+ 
+ ###################################################################
+ # Diagnostic Dump Configuration Parameters
+@@ -1219,9 +1221,9 @@
+ ###################################################################
+ 
+ DUMPDIR $INFORMIXDIR/tmp
+-DUMPSHMEM 1
+-DUMPGCORE 0
+-DUMPCORE 0
++DUMPSHMEM 2
++DUMPGCORE 1
++DUMPCORE 1
+ DUMPCNT 1
+ 
+ ###################################################################
+@@ -1249,7 +1251,7 @@
+ #                      when an AF occurs
+ ###################################################################
+ 
+-ALARMPROGRAM $INFORMIXDIR/etc/alarmprogram.sh
++ALARMPROGRAM $INFORMIXDIR/etc/alarmprogram.ids.sh
+ ALRM_ALL_EVENTS 0
+ STORAGE_FULL_ALARM 600,3
+ SYSALARMPROGRAM $INFORMIXDIR/etc/evidence.sh
+@@ -1263,8 +1265,8 @@
+ #                  Do not change; automatically updated.
+ ###################################################################
+ 
+-RAS_PLOG_SPEED 0
+-RAS_LLOG_SPEED 0
++RAS_PLOG_SPEED 71684
++RAS_LLOG_SPEED 1738
+ 
+ ###################################################################
+ # Character Processing Configuration Parameter
+@@ -1470,6 +1472,14 @@
+ #                   priority buffers for number page faults.
+ ###################################################################
+ 
+-BUFFERPOOL default,buffers=10000,lrus=8,lru_min_dirty=50.00,lru_max_dirty=60.50
+-BUFFERPOOL size=2k,buffers=50000,lrus=8,lru_min_dirty=50,lru_max_dirty=60	
++BUFFERPOOL default,buffers=10000,lrus=15,lru_min_dirty=70.00,lru_max_dirty=80.00
++BUFFERPOOL size=2k,buffers=100000,lrus=15,lru_min_dirty=70.00,lru_max_dirty=80.00
++BUFFERPOOL size=8K,buffers=1000000,lrus=15,lru_min_dirty=70.00,lru_max_dirty=80.00
++BUFFERPOOL size=16K,buffers=3000000,lrus=15,lru_min_dirty=70.00,lru_max_dirty=80.00
+ AUTO_LRU_TUNING 1
++
++#  0- 7: cpu0       8-15: cpu1
++# 16-23: cpu0(HT)  24-31: cpu1(HT)
++VPCLASS cpu,num=15,aff=(0-14),noage
++VPCLASS aio,num=2,aff=(15,31),noage
++VPCLASS soc,num=2,aff=(15,31),noage
