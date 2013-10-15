@@ -19,8 +19,8 @@ sample
   my.cnf 2種
 
 + `nginx-with-apache`  
-  PHP を nginx+apache で動作させる為の config。  
-  不要なモジュールや設定を除去した軽量化版。
+  nginx+apache で PHP と .htaccess を動作させるための config。  
+  不要なモジュールや設定を極力除去した軽量化版。
 
 + `perl-asf-parser`  
   Perl で ASF(WindowsMedia形式のライブストリーム)のヘッダーを  
