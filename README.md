@@ -6,7 +6,7 @@ sample
 
 
 + `informix-with-perl`  
-  Perl から Informix に接続する為のモジュール。 
+  Perl から Informix に接続する為のモジュール。  
   DBIx::Handler + DBIx::Simple(::Inject) + SQL::Maker
 
 + `informix`  
